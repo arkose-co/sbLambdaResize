@@ -14,7 +14,7 @@ const promises = [];
 exports.handler = function(event, context) {
     const key = event.Records[0].s3.object.key;
     const bucket = event.Records[0].s3.bucket.name;
-    if(key.substring(0, 13) == 'bouldersPics/') {
+    if(key.substring(0, 13) == 'bouldersPics/' || key.substring(0, 10) == 'zonesPics/') {
 
         widths.forEach((width) => {
             promises.push(
