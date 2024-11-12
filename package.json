@@ -1,15 +1,20 @@
 {
-  "name": "image-resize",
+  "name": "image-resizer",
   "version": "1.0.0",
-  "description": "Serverless image resizing",
-  "readme": "Serverless image resizing",
-  "repository": "https://github.com/awslabs/serverless-image-resizing",
-  "license": "Apache-2.0",
+  "description": "A Lambda function to resize images using AWS SDK v3 and Sharp",
   "main": "index.js",
-  "dependencies": {
-    "sharp": "^0.17.3"
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"No test specified\" && exit 0"
   },
-  "devDependencies": {
-    "aws-sdk": "^2.36.0"
+  "author": "Lucas Ménant",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.0.0",
+    "sharp": "^0.32.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }
