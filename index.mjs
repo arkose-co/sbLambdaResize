@@ -10,6 +10,7 @@ const widths = [400, 800];
 export const handler = async function(event, context) {
     const key = event.Records[0].s3.object.key;
     const bucket = event.Records[0].s3.bucket.name;
+    const isWebp = key.endsWith('.webp');
 
     if (key.startsWith('bouldersPics/') || key.startsWith('zonesPics/')) {
         try {
@@ -30,17 +31,17 @@ export const handler = async function(event, context) {
 
                 const imageBuffer = await streamToBuffer(Body);
 
-                // Resize the image using Sharp
-                const buffer = await Sharp(imageBuffer)
-                    .resize(width)
-                    .toFormat('jpeg')
-                    .toBuffer();
+                // Resize the image using Sharp. WebP sources stay WebP; everything else stays JPEG.
+                const resized = Sharp(imageBuffer).resize(width);
+                const buffer = isWebp
+                    ? await resized.webp({ quality: 75, effort: 4, smartSubsample: true }).toBuffer()
+                    : await resized.toFormat('jpeg').toBuffer();
 
                 // Put the resized image back to S3
                 const putObjectCommand = new PutObjectCommand({
                     Body: buffer,
                     Bucket: bucket,
-                    ContentType: 'image/jpeg',
+                    ContentType: isWebp ? 'image/webp' : 'image/jpeg',
                     Key: `${width}/${key}`,
                 });
 
